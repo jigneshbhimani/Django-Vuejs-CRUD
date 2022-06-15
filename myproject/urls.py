@@ -25,7 +25,7 @@ from django.conf import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
-    path('article', TemplateView.as_view(template_name='index.html')),
+    path('article', TemplateView.as_view(template_name='article.html')),
     path('book', TemplateView.as_view(template_name='book.html')),
     path('product', TemplateView.as_view(template_name='product.html')),
 
