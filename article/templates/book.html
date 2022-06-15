@@ -24,14 +24,14 @@
       <div class="container">
         <div class="row">
           <h1>
-            ARTICLES
+            BOOKS
             <button
               type="button"
               class="btn btn-primary"
               data-toggle="modal"
-              data-target="#addArticleModal"
+              data-target="#addBookModal"
             >
-              ADD ARTICLE
+              ADD BOOK
             </button>
           </h1>
           <div class="form-inline my-2 my-lg-0" style="margin-left: 40%">
@@ -44,7 +44,7 @@
             />
             <button
               class="btn btn-outline-success my-2 my-sm-0"
-              @click.prevent="getArticles()"
+              @click.prevent="getBooks()"
             >
               Search
             </button>
@@ -54,26 +54,26 @@
             <thead>
               <tr>
                 <th scope="col">#</th>
-                <th scope="col">Heading</th>
-                <th scope="col">Body</th>
+                <th scope="col">Name</th>
+                <th scope="col">Author</th>
                 <th scope="col">Action</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="article in articles">
-                <th scope="row">${article.article_id}</th>
-                <td>${article.article_heading}</td>
-                <td>${article.article_body}</td>
+              <tr v-for="book in books">
+                <th scope="row">${book.book_id}</th>
+                <td>${book.book_name}</td>
+                <td>${book.book_author}</td>
                 <td>
                   <button
                     class="btn btn-info"
-                    @click="getArticle(article.article_id)"
+                    @click="getBook(book.book_id)"
                   >
                     Edit
                   </button>
                   <button
                     class="btn btn-danger"
-                    @click="deleteArticle(article.article_id)"
+                    @click="deleteBook(book.book_id)"
                   >
                     Delete
                   </button>
@@ -83,7 +83,7 @@
           </table>
           <div
             class="modal fade"
-            id="addArticleModal"
+            id="addBookModal"
             tabindex="-1"
             role="dialog"
             aria-labelledby="exampleModalLongTitle"
@@ -93,7 +93,7 @@
               <div class="modal-content">
                 <div class="modal-header">
                   <h5 class="modal-title" id="exampleModalLongTitle">
-                    ADD ARTICLE
+                    ADD BOOK
                   </h5>
                   <button
                     type="button"
@@ -103,30 +103,41 @@
                   >
                   </button>
                 </div>
-                <form @click.prevent="addArticle()">
+                <form @click.prevent="addBook()">
                   <div class="modal-body">
                     <div class="form-group">
-                      <label for="article_heading">Article Heading</label>
+                      <label for="book_heading">Book Name</label>
                       <input
                         type="text"
                         class="form-control"
-                        id="article_heading"
-                        placeholder="Enter Article Heading"
-                        v-model="newArticle.article_heading"
+                        id="book_heading"
+                        placeholder="Enter Book Name"
+                        v-model="newBook.book_name"
                         required="required"
                       />
                     </div>
                     <div class="form-group">
-                      <label for="article_body">Article Body</label>
+                      <label for="book_author">Book Author</label>
                       <textarea
                         class="form-control"
-                        id="article_body"
-                        placeholder="Enter Article Body"
-                        v-model="newArticle.article_body"
+                        id="book_author"
+                        placeholder="Enter Book Author"
+                        v-model="newBook.book_author"
                         required="required"
-                        rows="7"
+                        rows="3"
                       ></textarea>
                     </div>
+                    <div class="form-group">
+                        <label for="book_description">Book Description</label>
+                        <textarea
+                          class="form-control"
+                          id="book_description"
+                          placeholder="Enter Book Description"
+                          v-model="newBook.book_description"
+                          required="required"
+                          rows="7"
+                        ></textarea>
+                      </div>
                   </div>
                   <div class="modal-footer">
                     <button
@@ -146,7 +157,7 @@
           </div>
           <div
             class="modal fade"
-            id="editArticleModal"
+            id="editBookModal"
             tabindex="-1"
             role="dialog"
             aria-labelledby="exampleModalLongTitle"
@@ -156,7 +167,7 @@
               <div class="modal-content">
                 <div class="modal-header">
                   <h5 class="modal-title" id="exampleModalLongTitle">
-                    EDIT ARTICLE
+                    EDIT BOOK
                   </h5>
                   <button
                     type="button"
@@ -166,30 +177,41 @@
                   >
                   </button>
                 </div>
-                <form @click.prevent="updateArticle()">
+                <form @click.prevent="updateBook()">
                   <div class="modal-body">
                     <div class="form-group">
-                      <label for="article_heading">Article Heading</label>
+                      <label for="book_name">Book Name</label>
                       <input
                         type="text"
                         class="form-control"
-                        id="article_heading"
-                        placeholder="Enter Article Heading"
-                        v-model="currentArticle.article_heading"
+                        id="book_name"
+                        placeholder="Enter Book Name"
+                        v-model="currentBook.book_name"
                         required="required"
                       />
                     </div>
                     <div class="form-group">
-                      <label for="article_body">Article Body</label>
+                      <label for="book_author">Book Author</label>
                       <textarea
                         class="form-control"
-                        id="article_body"
-                        placeholder="Enter Article Body"
-                        v-model="currentArticle.article_body"
+                        id="book_author"
+                        placeholder="Enter Book Author"
+                        v-model="currentBook.book_author"
                         required="required"
-                        rows="7"
+                        rows="3"
                       ></textarea>
                     </div>
+                    <div class="form-group">
+                        <label for="book_description">Book Description</label>
+                        <textarea
+                          class="form-control"
+                          id="book_description"
+                          placeholder="Enter Book Description"
+                          v-model="currentBook.book_description"
+                          required="required"
+                          rows="5"
+                        ></textarea>
+                      </div>
                   </div>
                   <div class="modal-footer">
                     <button
@@ -235,70 +257,70 @@
         el: "#starting",
         delimiters: ["${", "}"],
         data: {
-          articles: [],
-          currentArticle: {},
+          books: [],
+          currentBook: {},
           message: null,
-          newArticle: { article_heading: null, article_body: null },
+          newBook: { book_name: null, book_author: null, book_description: null },
           search_term: "",
         },
         mounted() {
-          this.getArticles();
+          this.getBooks();
         },
         methods: {
-          getArticles() {
-            let api_url = "/api/article/";
+          getBooks() {
+            let api_url = "/api/book/";
             if (this.search_term !== "" || this.search_term !== null) {
-              api_url = `/api/article/?search=${this.search_term}`;
+              api_url = `/api/book/?search=${this.search_term}`;
             }
             this.$http
               .get(api_url)
               .then((response) => {
-                this.articles = response.data;
+                this.books = response.data;
               })
               .catch((err) => {
                 console.log(err);
               });
           },
-          getArticle(id) {
+          getBook(id) {
             this.$http
-              .get(`/api/article/${id}/`)
+              .get(`/api/book/${id}/`)
               .then((response) => {
-                this.currentArticle = response.data;
-                $("#editArticleModal").modal("show");
+                this.currentBook = response.data;
+                $("#editBookModal").modal("show");
               })
               .catch((err) => {
                 console.log(err);
               });
           },
-          addArticle() {
+          addBook() {
             this.$http
-              .post("/api/article/", this.newArticle)
+              .post("/api/book/", this.newBook)
               .then((response) => {
-                this.getArticles();
+                this.getBooks();
               })
               .catch((err) => {
                 console.log(err);
               });
           },
-          updateArticle() {
+          updateBook() {
             this.$http
               .put(
-                `/api/article/${this.currentArticle.article_id}/`,
-                this.currentArticle
+                `/api/book/${this.currentBook.book_id}/`,
+                this.currentBook
               )
               .then((response) => {
-                this.currentArticle = response.data;
-                this.getArticles();
+                this.currentBook = response.data;
+                this.getBooks();
               })
               .catch((err) => {
                 console.log(err);
               });
           },
-          deleteArticle(id) {
+          deleteBook(id) {
             this.$http
-              .delete(`/api/article/${id}/`)
+              .delete(`/api/book/${id}/`)
               .then((response) => {
-                this.getArticles();
+                this.getBooks();
               })
               .catch((err) => {
                 console.log(err);
